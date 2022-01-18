@@ -9,15 +9,31 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     wget \
     zip \
     locales \
+    binutils \
+    clang \
+    make \
+    gcc \
+    file \
+    ruby-full \
     openssh-client && \
     rm -rf /var/lib/apt/lists/* && \
     rm -rf /var/cache/* && \
     apt-get clean && \
     apt-get autoremove --purge
+
+
 RUN locale-gen en_US.UTF-8
 ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
+
+RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"
+
+ENV PATH="/home/linuxbrew/.linuxbrew/bin:${PATH}"
+
+RUN brew install terragrunt
+
 RUN git clone -b v2.2.2 https://github.com/tfutils/tfenv.git ~/.tfenv && \
     ln -s ~/.tfenv/bin/* /usr/local/bin
+
 RUN python3 -m pip install --upgrade pip && \
     python3 -m pip install --no-cache-dir --upgrade setuptools && \
     python3 -m pip install --no-cache-dir --upgrade awscli && \
@@ -27,6 +43,7 @@ RUN python3 -m pip install --upgrade pip && \
     python3 -m pip install --no-cache-dir requests && \
     python3 -m pip install --no-cache-dir Jinja2 && \
     python3 -m pip cache purge
+
 RUN tfenv install 0.11.15 &&\
     tfenv install 0.12.31 &&\
     tfenv install 0.13.7 &&\
