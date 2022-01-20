@@ -36,7 +36,7 @@ if [ $tf_working_dir_num -gt 1 ]; then
 fi
 
 # Only execute this if exitCode == 0
-if [ $exitCode -eq 0 ] && [ ! -d "$TF_WORKING_DIR" ]; then
+if [ $exitCode -eq 0 ] && [ ! -d "modules/${TF_WORKING_DIR}" ]; then
     notify_github.py "- ${TF_WORKING_DIR//\\n/;} directory is deleted. Will do nothing. Please run terraform operation manually!"
     export TF_WORKING_DIR=""
     export SKIP_CICD=1
@@ -44,7 +44,7 @@ fi
 
 # Only execute this if exitCode == 0
 if [ $exitCode -eq 0 ] && [ -n "$TF_WORKING_DIR" ]; then
-  pushd $TF_WORKING_DIR
+  pushd modules/${TF_WORKING_DIR}
 
   # run tfenv install when .terraform-version exist
   test ! -f .terraform-version || tfenv install
