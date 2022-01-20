@@ -12,7 +12,7 @@ if [ $? -ne 0 ]; then
 fi
 
 # Set env var TF_WORKING_DIR
-export TF_WORKING_DIR="$(git diff origin/main --name-only | grep '\.tf$\|\.tpl$\|\.hcl$' | sed 's/\/[^/]\+\.tf$\|\/[^/]\+\.tpl$\|\/[^/]\+\.hcl$//g' | sed 's/deployments\///g; s/modules//g' | sed 's/dev//g; s/stg//g; s/prod//g' | sed -e 's/\///' | sort | uniq)"
+export TF_WORKING_DIR="$(git diff origin/master --name-only | grep '\.tf$\|\.tpl$\|\.hcl$' | sed 's/\/[^/]\+\.tf$\|\/[^/]\+\.tpl$\|\/[^/]\+\.hcl$//g' | sed 's/deployments\///g; s/modules//g' | sed 's/dev//g; s/stg//g; s/prod//g' | sed -e 's/\///' | sort | uniq)"
 tf_working_dir_num="$(wc -l <<<"${TF_WORKING_DIR}")"
 echo "Folders contain tf file changes: $TF_WORKING_DIR"
 
