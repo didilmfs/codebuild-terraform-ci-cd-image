@@ -15,8 +15,25 @@ fi
 echo "Working dir : $TF_WORKING_DIR"
 mkdir -p artifact
 if [ "$TF_WORKING_DIR" != "" ]; then
-    cd $TF_WORKING_DIR
-    terraform init -no-color 2> /tmp/errMsg.log
-    terraform plan -out=terraform.tfplan -no-color 2> /tmp/errMsg.log
-    cd -
+    if [ ! -f "deployments/dev/${TF_WORKING_DIR}/terragrunt.hcl" ]; then
+        notify_github.py "- ${TF_WORKING_DIR//\\n/;} dir/file is not found. Will do nothing."
+    else;
+        pushd deployments/dev/$TF_WORKING_DIR
+        terragrunt init -no-color 2> /tmp/errMsg.log
+        terragrunt plan -out=terraform.tfplan -no-color 2> /tmp/errMsg.log
+        popd
+    if [ ! -f "deployments/stg/${TF_WORKING_DIR}/terragrunt.hcl" ]; then
+        notify_github.py "- ${TF_WORKING_DIR//\\n/;} dir/file is not found. Will do nothing."
+    else;
+        pushd deployments/stg/$TF_WORKING_DIR
+        terragrunt init -no-color 2> /tmp/errMsg.log
+        terragrunt plan -out=terraform.tfplan -no-color 2> /tmp/errMsg.log
+        popd
+    if [ ! -f "deployments/prod/${TF_WORKING_DIR}/terragrunt.hcl" ]; then
+        notify_github.py "- ${TF_WORKING_DIR//\\n/;} dir/file is not found. Will do nothing."
+    else;
+        pushd deployments/prod/$TF_WORKING_DIR
+        terragrunt init -no-color 2> /tmp/errMsg.log
+        terragrunt plan -out=terraform.tfplan -no-color 2> /tmp/errMsg.log
+        popd
 fi
