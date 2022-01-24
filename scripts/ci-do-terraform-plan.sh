@@ -16,24 +16,27 @@ echo "Working dir : $TF_WORKING_DIR"
 mkdir -p artifact
 if [ "$TF_WORKING_DIR" != "" ]; then
     if [ ! -f "deployments/dev/${TF_WORKING_DIR}/terragrunt.hcl" ]; then
-        notify_github.py "- ${TF_WORKING_DIR//\\n/;} dir/file is not found. Will do nothing."
-    else;
+        notify_github.py "- deployments/dev/${TF_WORKING_DIR//\\n/;}/terragrunt.hcl file is not found. Will do nothing."
+    else
         pushd deployments/dev/$TF_WORKING_DIR
         terragrunt init -no-color 2> /tmp/errMsg.log
         terragrunt plan -out=terraform.tfplan -no-color 2> /tmp/errMsg.log
         popd
+    fi
     if [ ! -f "deployments/stg/${TF_WORKING_DIR}/terragrunt.hcl" ]; then
-        notify_github.py "- ${TF_WORKING_DIR//\\n/;} dir/file is not found. Will do nothing."
-    else;
+        notify_github.py "- deployments/stg/${TF_WORKING_DIR//\\n/;}/terragrunt.hcl file is not found. Will do nothing."
+    else
         pushd deployments/stg/$TF_WORKING_DIR
         terragrunt init -no-color 2> /tmp/errMsg.log
         terragrunt plan -out=terraform.tfplan -no-color 2> /tmp/errMsg.log
         popd
+    fi
     if [ ! -f "deployments/prod/${TF_WORKING_DIR}/terragrunt.hcl" ]; then
-        notify_github.py "- ${TF_WORKING_DIR//\\n/;} dir/file is not found. Will do nothing."
-    else;
+        notify_github.py "- deployments/prod/${TF_WORKING_DIR//\\n/;}/terragrunt.hcl file is not found. Will do nothing."
+    else
         pushd deployments/prod/$TF_WORKING_DIR
         terragrunt init -no-color 2> /tmp/errMsg.log
         terragrunt plan -out=terraform.tfplan -no-color 2> /tmp/errMsg.log
         popd
+    fi
 fi
